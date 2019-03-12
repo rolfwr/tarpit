@@ -1,0 +1,2198 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Crawling out of the turing tarpit</title>
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/vizrt.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+    <style>
+        .slide-background.lefty .slide-background-content {
+            width: 50%;
+            right: 0;
+        }
+
+        .reveal .slides section.lefty div {
+            width: 45%;
+            left: 0;
+        }
+
+
+        .slide-background.righty .slide-background-content {
+            width: 50%;
+            left: 0;
+        }
+
+        .reveal .slides section.righty div {
+            position: absolute;
+            width: 45%;
+            right: 0;
+        }
+
+        .reveal .slides var {
+            font-family: "Source Sans Pro", "Open Sans", sans-serif;
+            font-style: italic;
+            color: #f0824f;
+        }
+
+        .reveal .slides .green {
+            font-style: italic;
+            color: #f0824f;
+        }
+
+        .reveal .slides .blue {
+            color: #65bbe4;
+        }
+
+        .reveal .slides .vizrt-color {
+            color: #f0824f;
+        }
+
+
+        @keyframes bounce {
+            0% {
+                transform: translateX(-10px);
+            }
+
+            100% {
+                transform: translateX(+4px);
+            }
+        }
+
+        .bounce {
+            animation: bounce 0.5s cubic-bezier(.5, 0.05, 1, .5);
+            animation-direction: alternate;
+            animation-iteration-count: infinite;
+            display: inline-block;
+        }
+
+        section.codesplit> :nth-child(1) {
+            position: absolute;
+            top: -650px;
+            left: -520px;
+            width: 1000px;
+            height: 2000px;
+
+        }
+
+        section.codesplit> :nth-child(1)>div {
+            position: absolute;
+            top: 650px;
+            right: 20px;
+            margin: 0;
+            padding: 0;
+            width: 460px;
+            font-size: 0.5em;
+            line-height: 1.2;
+        }
+
+        section.codesplit> :nth-child(1)>div>pre {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
+        section.codesplit> :nth-child(1)>div>pre>code {
+            max-height: 800px;
+        }
+
+        section.codesplit> :nth-child(2) {
+            position: absolute;
+            width: 960px;
+            top: -650px;
+            left: 480px;
+            width: 1000px;
+            height: 2000px;
+            background: #1a2c33;
+        }
+
+        section.codesplit> :nth-child(2)>h2 {
+            position: absolute;
+            width: 460px;
+            left: 25px;
+            top: 900px;
+            color: #3b5c6b;
+        }
+
+        .reveal table tbody td {
+            font-size: 80%;
+        }
+
+        div.codeevolve {
+            font-size: 60%;
+            position: absolute;
+        }
+
+        div.codeevolve>div {
+            text-align: left;
+            font-family: monospace;
+            white-space: pre;
+            position: relative;
+        }
+
+        div.codeevolve>pre {
+            text-align: left;
+            font-family: monospace;
+            white-space: pre;
+            position: relative;
+            width: inherit;
+            margin: inherit;
+            font-size: inherit;
+            line-height: inherit;
+            box-shadow: inherit;
+        }
+
+        .reveal .slides div.codeevolve.right>div {
+            margin-left: 500px;
+        }
+
+        .reveal .slides div.codeevolve.right>pre {
+            margin-left: 500px;
+        }
+
+        .reveal .slides div.centerarrow {
+            position: absolute;
+            left: 400px;
+            top: 300px;
+            font-size: 60px;
+            color: #f0824f;
+        }
+
+        .reveal .slides .codeevolve .fade-out.visible {
+            font-size: 0px;
+        }
+
+        .reveal .slides .codeevolve .fade-left:not(.visible) {  
+            font-size: 0px;
+        }
+
+        .reveal .slides .tiny {
+            font-size: 10px;
+            line-height: 1.2em;
+            max-height: none;
+        }
+
+        .reveal .slides .reduced {
+            font-size: 18px;
+            line-height: 1.2em;
+            max-height: none;
+        }
+
+        .reveal .slides .squeezed {
+            font-size: 22px;
+            line-height: 1.2em;
+            max-height: none;
+        }
+
+        .reveal .slides .white-contrast {
+            color: #ddd;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 50px;
+            border-radius: 10px;
+        }
+
+        .reveal .slides .white-contrast h3 {
+            color: white;
+        }
+
+        .reveal .slides .white-contrast strong {
+            color: white;
+        }
+
+        .blinking-cursor {
+            animation: 1s blink step-end infinite;
+        }
+
+        @keyframes blink {
+            from, to {
+                color: transparent;
+            }
+            50% {
+                color: white;
+            }
+        }
+
+        .reveal .controls .controls-arrow::before,
+        .reveal .controls .controls-arrow::after {
+            background: #3b5c6b;
+        }
+
+        .reveal section img.chart {
+            padding: 10px;
+            max-width: 60vw;
+            max-height: 40vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section>
+                <h1>Crawling out of the turing tarpit</h1>
+            </section>
+            <section>
+                <div style="height: 100px;"></div>
+                <h3>Today we're going to</h3>
+                <ul>
+                    <li>Design an instruction set</li>
+                    <li>Build a virtual machine</li>
+                </ul>
+                <div style="left: 10px; width: 420px;" class="reduced">
+                        <div style="height: 100px;"></div>
+                        <div class="white-contrast" style="padding: 30px;">
+                            <img src="images/chromecube.svg" style="float: left; height: 80px; margin: 0; margin-right: 20px; padding: 0" class="plain">
+                            <h3>Rolf W. Rasmussen</h3>
+                            <p style="margin-bottom: 0;">Chief Software Architect, Vizrt</p>
+                        </div>
+                    </div>
+                </section>    
+            <section>
+                <h3>Hints for following along</h3>
+                <ul>
+                    <li>Grab the archive of executable images from <a href="http://rolfwr.net/rwisa/rwisa-exe.zip">http://rolfwr.net/rwisa/rwisa-exe.zip</a></li>
+                    <li>Choose your preferred programming language.</li>
+                    <li>Prepare a simple "Hello World" console application to start building upon.</li>
+                    <li>If you get stuck, refer to example implementations at <a href="https://github.com/rolfwr/rwisa-vm">https://github.com/rolfwr/rwisa-vm</a></li>
+                    <li>Slides at <a href="http://rolfwr.net/tarpit">http://rolfwr.net/tarpit</a></li>
+                </ul>
+            </section>
+            <section>
+                <h2>Instruction Set Architectures (ISA)</h2>
+                <p class="fragment fade-left" data-fragment-index="1">Minimal Instruction Set Computer (MISC)</p>
+                <ul>
+                    <li>OISC — One</li>
+                    <li class="fragment grow highlight-vizrt" data-fragment-index="1">MISC — Minimal</li>
+                    <li>RISC — Reduced</li>
+                    <li>CISC — Complex</li>
+                </ul>
+            </section>
+            <section>
+                <section>
+                    <h2>Milestone #1</h2>
+                    <p>Create a minimal runnable program</p>
+                    <p>true — do nothing, successfully</p>
+                </section>
+                <section>
+                    <h2>Executable Images</h2>
+                    <p>Header vs headerless formats</p>
+                    <p class="fragment fade-left">For now, let's choose headerless for simplicity.</p>
+                </section>
+                <section>
+                    <h3>Executable formats with headers</h3>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Format</th>
+                                <th>Main use</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>DOS MZ</td>
+                                <td>DOS</td>
+                            </tr>
+                            <tr>
+                                <td>COFF</td>
+                                <td>Old Unix and old Windows</td>
+                            </tr>
+                            <tr>
+                                <td>ELF</td>
+                                <td>Unix and Linux</td>
+                            </tr>
+                            <tr>
+                                <td>PE</td>
+                                <td>Windows</td>
+                            </tr>
+                            <tr>
+                                <td>Mach-O</td>
+                                <td>NeXTSTEP, macOS, iOS</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </section>
+                <section>
+                    <h3>Executable formats without headers</h3>
+                    <p>.COM executable hex dump</p>
+                    <pre><code data-trim class="nohighlight hljs" data-noescape>
+<span class="hljs-meta">0E 1F BA 0E 01 B4 09 CD 21 B8 01 4C CD 21 48 65</span>   ........!..L.!He
+<span class="hljs-meta">6C 6C 6F 20 57 6F 72 6C 64 21 0D 0D 0A 24</span>         llo.World!...$
+</code></pre>
+                    <div class="fragment fade-left">
+                        <p>Assembly</p>
+                        <pre><code data-trim class="nohighlight hljs" data-noescape>
+<span class="fragment current-visible bounce">➡</span><span class="hljs-meta">0E</span>                   <span class="hljs-keyword">push</span> <span class="hljs-builtin">cs</span>
+<span class="fragment current-visible bounce">➡</span><span class="hljs-meta">1F</span>                   <span class="hljs-keyword">pop</span> <span class="hljs-builtin">ds</span>
+<span class="fragment current-visible bounce">➡</span><span class="hljs-meta">BA 0E 01</span>             <span class="hljs-keyword">mov</span> <span class="hljs-builtin">dx</span>, <span class="hljs-number">0x10e</span>
+<span class="fragment current-visible bounce">➡</span><span class="hljs-meta">B4 09</span>                <span class="hljs-keyword">mov</span> <span class="hljs-builtin">ah</span>, <span class="hljs-number">9</span>
+<span style="visibility: hidden">➡</span><span class="hljs-meta">CD 21</span>                <span class="hljs-keyword">int</span> <span class="hljs-number">0x21</span>
+<span style="visibility: hidden">➡</span><span class="hljs-meta">B8 01 4C</span>             <span class="hljs-keyword">mov</span> <span class="hljs-builtin">ax</span>, <span class="hljs-number">0x4c01</span>
+<span style="visibility: hidden">➡</span><span class="hljs-meta">CD 21</span>                <span class="hljs-keyword">int</span> <span class="hljs-number">0x21</span>
+<span style="visibility: hidden">➡</span><span class="hljs-meta">48 65 6C 6C 6F 20 57 6F 72 6C 64 21 0D 0D 0A 24</span>
+                       <span class="hljs-keyword">db</span> '<span class="hljs-string">Hello World!</span>', <span class="hljs-number">0dh</span>, <span class="hljs-number">0dh</span>, <span class="hljs-number">0ah</span>, '<span class="hljs-string">$</span>'
+</code></pre>
+                    </div>
+                </section>
+                <section data-background="images/charles-babbage.jpg" data-background-transition="slide" class="lefty">
+                    <div>
+                        <h3>Charles Babbage</h3>
+                        <p><strong>Difference Engine:</strong> Mechanical number crunching.</p>
+                        <p><strong>Analytical Engine:</strong> Unrealized mechanical computer with branches, loops and memory.</p>
+                    </div>
+                </section>
+
+                <section data-background="images/ada-lovelace.jpg" data-background-transition="slide" class="righty">
+                    <div>
+                        <h3>Ada Lovelace</h3>
+                        <p>Visionary that recognized that general-purpose computers could be used for more than number crunching.</p>
+                    </div>
+                </section>
+
+                <section data-background="images/alan-turing.jpg" data-background-transition="slide" class="lefty">
+                    <div>
+                        <h3>Alan Turing</h3>
+                        <p>The nature of computation</p>
+                        <p><strong>Turing Machine:</strong> Theoretical model sufficient for general purpose computing.</p>
+                        <p><strong>Turing equivalence:</strong> Sufficiently complex systems can simulate each other.</p>
+                    </div>
+                </section>
+                <section data-background="images/von-neumann.jpg" data-background-transition="slide" class="righty">
+                    <div>
+                        <h2>John von Neumann</h2>
+                        <p><strong>Stored-program computers:</strong> Change how a computer behaves without rewiring it by storing programs and data in integrated memory.</p>
+                    </div>
+                </section>
+                <section data-background="images/alan-perlis.jpg" data-background-transition="slide" class="lefty">
+                    <div>
+                        <h2>Alan Perlis</h2>
+                        <p>Epigrams in programming</p>
+                        <p><i>54. Beware of the Turing tar-pit in which everything is possible but nothing of interest is easy.</i></p>
+                    </div>
+                </section>
+            </section>
+            <section>
+                <section>
+                    <h3>Machine State</h3>
+                    <p>Von Neumann architecture state</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>State</th>
+                                <th>Type</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Memory</td>
+                                <td>Byte array</td>
+                                <td>Store program and data</td>
+                            </tr>
+                            <tr>
+                                <td>Program Counter (PC)</td>
+                                <td>Integer/Pointer</td>
+                                <td>Find next instruction</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+                <section>
+                    <h3>Pointer size address space</h3>
+                    <table>
+                        <tbody>
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Pointer<br>bytes</th>
+                                    <th>Address<br>space</th>
+                                </tr>
+                            </thead>
+                            <tr>
+                                <td>8-bit</td>
+                                <td>1</td>
+                                <td>256 bytes</td>
+                            </tr>
+                            <tr>
+                                <td>16-bit</td>
+                                <td>2</td>
+                                <td>64 KiB</td>
+                            </tr>
+                            <tr class="fragment grow highlight-vizrt">
+                                <td>32-bit</td>
+                                <td>4</td>
+                                <td>4 GiB</td>
+                            </tr>
+                            <tr>
+                                <td>64-bit</td>
+                                <td>8</td>
+                                <td>16 EiB</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </section>
+            <section>
+                <section>
+                    <h2>Halt</h2>
+                    <p>Stop instruction execution.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Opcode</th>
+                                <th>Mnemonic</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>00</td>
+                                <td>HLT</td>
+                                <td>Halt</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+                <section>
+                    <h3>Implementation of "true"</h3>
+                    <p>1-true.rwa2 hex dump</p>
+                    <pre><code data-trim class="nohighlight hljs" data-noescape>
+        <span class="hljs-meta">00</span>                                                .
+        </code></pre>
+                    <div class="fragment fade-left">
+                        <p>Assembly</p>
+
+                        <pre><code data-trim class="nohighlight hljs" data-noescape>			
+<span class="fragment current-visible"><span class="bounce">➡</span><span style="display: block; position: absolute; top: -30px; left: 0%; color: white">PC = 0</span></span><span class="hljs-meta">00</span>                   <span class="hljs-keyword">hlt</span>
+<span class="fragment current-visible">➡<span style="display: block; position: absolute; top: -30px; left: 0%; color: white">PC = 1, halted</span></span>
+        </code></pre>
+                    </div>
+                </section>
+
+            </section>
+            <section>
+                <section class="codesplit">
+                    <div>
+                        <div>
+                            <p><strong>Python</strong></p>
+                            <pre><code data-trim class="python">
+#! /bin/env python3
+import sys
+
+programfile = sys.argv[1]
+
+with open(programfile, mode='rb') as file:
+    mem = bytearray(file.read())
+
+pc = 0
+while True:
+    inst = mem[pc]
+    pc = pc + 1
+    if inst == 0: # Halt (HLT)
+        sys.exit(0)
+    raise NotImplementedError("Unknown instruction " + str(inst))
+</code></pre>
+
+                            <p><strong>C hints:</strong><br>
+                                stdio.h, stdlib.h, fopen(n, "rb"), fseek(f,0,SEEK_END), ftell(f), rewind(f), malloc(c), fread(b, 1, c, f), fclose(f), exit(0)</p>
+                            <p><strong>Node.js hints:</strong><br>
+                                fs.readFileSync(n), process.argv[2], process.exit(0)</p>
+                            <p><strong>C# hints:</strong><br>
+                                System.IO.File.ReadAllBytes(n), System.Environment.Exit(0)</p>
+
+                        </div>
+
+                    </div>
+                    <div>
+                        <h2>Let's<br>code</h2>
+                    </div>
+                </section>
+
+
+
+                <section data-background="images/manchester_baby.jpg" data-background-transition="slide" class="righty">
+                    <div>
+                        <h3>1948</h3>
+                        <p>Stop (STP)</p>
+                        <p>Manchester Baby</p>
+                        <p>First stored progam computer</p>
+                    </div>
+                </section>
+
+                <section data-background="images/univac_i.jpg" data-background-transition="slide" class="lefty">
+                    <div>
+                        <h3>1951</h3>
+                        <p>90m STOP UNIVAC</p>
+                        <p>UNIVAC I</p>
+                        <p>First commercial computer</p>
+                    </div>
+                </section>
+
+                <section data-background="images/intel_c8008.jpg" data-background-transition="slide" class="righty">
+                    <div>
+                        <h3>1972</h3>
+                        <p>Halt (HLT)</p>
+                        <p>Intel 8008, 8080, 8086, x86, x86_64</p>
+                        <p>First commercial non-calculator personal computers</p>
+                    </div>
+                </section>
+                <section data-background="images/mos6502.jpg" data-background-transition="slide" class="lefty">
+                    <div>
+                        <h3>1975</h3>
+                        <p>Break (BRK)</p>
+                        <p>MOS 6502, 6510</p>
+                        <p>Popular in early micro computers</p>
+                    </div>
+                </section>
+
+
+            </section>
+            <section>
+                <section>
+                    <h2>Milestone #2</h2>
+                    <p>Hello World!</p>
+                    <p>Providing output from program</p>
+                </section>
+
+                <section>
+                    <h2>Data Access</h2>
+                    <p>Where can data be found?</p>
+                    <ul>
+                        <li>Embedded in instructions</li>
+                        <li>Stored internally in the Central Processing Unit (CPU)</li>
+                        <li>Stored in Random Access Memory (RAM)</li>
+                        <li>Sent or received through input/output ports (I/O)</li>
+                    </ul>
+                </section>
+                <section>
+                    <h2>Addressing modes</h2>
+                    <table style="font-size: 0.75em">
+                        <tbody>
+                            <tr>
+                                <th>Immediate</th>
+                                <td>Use data value embedded in instruction.</td>
+                            </tr>
+                            <tr>
+                                <th>Register</th>
+                                <td>Access data from internal CPU storage.</td>
+                            </tr>
+                            <tr class="fragment highlight-vizrt">
+                                <th>Address</th>
+                                <td>Access data in memory location specified by address.</td>
+                            </tr>
+                            <tr>
+                                <th>Indirect</th>
+                                <td>First read address value, then access data in memory location specified by address.
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Offset </th>
+                                <td>Add to value to address when accessing memory location specified by address.</td>
+                            </tr>
+                            <tr class="fragment highlight-vizrt">
+                                <th>Implicit</th>
+                                <td>Access data locations such as stack and I/O ports as implied by the instruction
+                                    operation.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </section>
+            <section>
+                <section>
+                    <h2>Output Byte (OUT)</h2>
+                    <p>Write byte to standard output.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Opcode</th>
+                                <th>Mnemonic</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>01 <var>srcptr</var></td>
+                                <td>OUT</td>
+                                <td>Output Byte</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>Read byte from address specified by <var>srcptr</var>, then write that byte to output.</p>
+                </section>
+                <section>
+                    <h2>Print the letter H</h2>
+                    <pre><code data-trim class="nohighlight hljs" data-noescape>
+<span class="hljs-meta">00000000:  01 06 00 00 00</span>        <span class="hljs-keyword">out</span> [<span class="hljs-number">0x00000006</span>]
+<span class="hljs-meta">00000005:  00</span>                    <span class="hljs-keyword">hlt</span>
+<span class="hljs-meta">00000006:  48</span>                    <span class="hljs-keyword">db</span> '<span class="hljs-string">H</span>'
+</code></pre>
+                    <p>Like most modern architectures, we choose little-endian representation. I.e. the byte sequence
+                        0x06, 0x00, 0x00, 0x00 is interpreted as the address 0x00000006.</p>
+                </section>
+            </section>
+            <section>
+                <section class="codesplit">
+                    <div>
+                        <div>
+                            <pre><code data-trim class="python" >
+import sys
+class Machine:
+    def __init__(self, memory, pc):
+        self.mem = memory
+        self.pc = pc
+
+    def fetch_pointer(self):
+        ptr = 0
+        for i in range(4):
+            ptr = ptr + (self.mem[self.pc] &lt;&lt; (i * 8))
+            self.pc = self.pc + 1
+        return ptr
+
+    def halt(self):
+        sys.exit(0)
+    
+    def outputbyte(self):
+        c = vm.mem[self.fetch_pointer()]
+        sys.stdout.buffer.write(bytes([c]))
+        sys.stdout.buffer.flush()
+
+    def run(self):
+        ops = { 0: self.halt, 1: self.outputbyte }
+        while True:
+            inst = self.mem[self.pc]
+            self.pc = self.pc + 1
+            ops[inst]()
+
+programfile = sys.argv[1]
+with open(programfile, mode='rb') as file:
+    memory = bytearray(file.read())
+vm = Machine(memory, 0)
+vm.run()
+                                        </code></pre>
+                            <p><strong>C hints:</strong> putchar(), fflush(stdout)</p>
+                            <p><strong>Node.js hints:</strong> Buffer(1), process.stdout.write(buf), this.output_byte.bind(this)</p>
+                            <p><strong>C# hints:</strong> System.Console.OpenStandardOutput(), s.WriteByte(b)</p>
+                        </div>
+
+                    </div>
+                    <div class="coderight">
+                        <h2>Let's<br>code</h2>
+                    </div>
+                </section>
+
+
+                <section>
+                    <h2>Test Anything Protocol</h2>
+                    <p>npm install -g tap</p>
+                    <p>vm 1-test.rwa2 | tap -</p>
+                </section>
+            </section>
+
+            <section>
+                <h2>Milestone #3</h2>
+                <p>Real unit testing</p>
+                <p>Testing and conditional execution.</p>
+            </section>
+
+
+            <section>
+                <section>
+                    <h2>Branch If Plus (BPL)</h2>
+                    <p>Jump if a signed byte is zero or positive</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Opcode</th>
+                                <th>Mnemonic</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>02 <var>jmpptr</var> <var>srcptr</var></td>
+                                <td>BPL</td>
+                                <td>Branch If Plus</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>Read byte from address <var>srcptr</var>, if its high bit is zero set PC to <var>jmpptr</var> address.
+                    </p>
+                </section>
+                <section>
+                    <h2>Jump Unconditionally</h2>
+                    <p>JMP target — Synthesized</p>
+                    <div class="codeevolve">
+                        <pre>          <var>...</var></pre>
+                        <pre>          jmp target</pre>
+                        <pre>          <var>...code to skip...</var></pre>
+                        <pre>target:   <var>...code to run...</var></pre>
+                        <pre>          hlt</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>          &nbsp;</pre>
+                    </div>
+                    <div class="centerarrow fragment fade-right" data-fragment-index="1">➔</div>
+                    <div class="codeevolve right fragment fade-right" data-fragment-index="1">
+                        <pre>          <var>...</var></pre>
+                        <pre class="fragment fade-out blue" data-fragment-index="2">          jmp target</pre>
+                        <pre class="fragment fade-left" data-fragment-index="2">          bpl target, zero</pre>
+                        <pre>          <var>...code to skip...</var></pre>
+                        <pre>target:   <var>...code to run...</var></pre>
+                        <pre>          hlt</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre class="fragment fade-left" data-fragment-index="2">zero:     db 0</pre>
+                    </div>
+                </section>
+                <section>
+                    <h2>Branch If Negative</h2>
+                    <p>BNE target, src — Synthesized</p>
+
+                    <div class="codeevolve">
+                        <pre>          <var>...</var></pre>
+                        <pre>          bne target, value</pre>
+                        <pre>          <var>...</var></pre>
+                        <pre>target:   <var>...</var></pre>
+                        <pre>          hlt</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>value:    db -7</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>          &nbsp;</pre>
+                    </div>
+                    <div class="centerarrow fragment fade-right" data-fragment-index="1">➔</div>
+                    <div class="codeevolve right fragment fade-right" data-fragment-index="1">
+                        <pre>          <var>...</var></pre>
+                        <pre class="fragment fade-out blue" data-fragment-index="2">          bne target, value</pre>
+                        <pre class="fragment fade-left" data-fragment-index="2">          bpl continue, value</pre>
+                        <pre class="fragment fade-left"
+                            data-fragment-index="2">          <span class="fragment highlight-blue" data-fragment-index="3">jmp target</span></pre>
+                        <pre class="fragment fade-left" data-fragment-index="2">continue: </pre>
+                        <pre>          <var>...</var></pre>
+                        <pre>target:   <var>...</var></pre>
+                        <pre>          hlt</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>value:    db -7</pre>
+                    </div>
+                </section>
+                <section>
+                    <h2>Do nothing</h2>
+                    <p>NOP — Synthesized</p>
+                    <div class="codeevolve">
+                        <pre>          <var>...</var></pre>
+                        <pre>          nop</pre>
+                        <pre>          <var>...more code to run...</var></pre>
+                        <pre>          hlt</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>          &nbsp;</pre>
+                    </div>
+                    <div class="centerarrow fragment fade-right" data-fragment-index="1">➔</div>
+                    <div class="codeevolve right fragment fade-right" data-fragment-index="1">
+                        <pre>          <var>...</var></pre>
+                        <pre class="fragment fade-out blue" data-fragment-index="2">          nop</pre>
+                        <pre class="fragment fade-left" data-fragment-index="2">          bpl 0, negative</pre>
+                        <pre>          <var>...more code to run...</var></pre>
+                        <pre>          hlt</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre class="fragment fade-left" data-fragment-index="2">negative: db -1</pre>
+                    </div>
+                </section>
+            </section>
+
+            <section class="codesplit">
+                <div>
+                    <div>
+                        <pre><code data-trim class="python" >
+class Machine
+    # ...
+    def branchifplus(self):
+        jmpptr = self.fetch_pointer()
+        srcptr = self.fetch_pointer()
+        if self.mem[srcptr] &lt; 128:
+            self.pc = jmpptr
+
+    def run(self):
+        ops = {
+            0: self.halt,
+            1: self.outputbyte,
+            2: self.branchifplus
+        }
+</code></pre>
+                        <p><strong>C-like hints:</strong><br>
+                            if (x &lt; 128)</p>
+                        </div>
+
+                </div>
+                <div class="coderight">
+                    <h2>Let's<br>code</h2>
+                </div>
+            </section>
+
+            <section>
+                <h2>Milestone #4</h2>
+                <p>Fizz Buzz</p>
+                <p>Arithmetic and conditional loops.</p>
+            </section>
+
+            <section>
+                <section>
+                    <h2>Subtract (SUB)</h2>
+                    <p>Subtract a byte from another byte.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Opcode</th>
+                                <th>Mnemonic</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>03 <var>dstptr</var> <var>srcptr</var></td>
+                                <td>SUB</td>
+                                <td>Subtract</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>Read byte value from <var>dstptr</var>, subtract byte value from <var>srcptr</var>, then write the
+                        result
+                        back to <var>dstptr</var>.</p>
+                </section>
+                <section>
+                    <h2>Set Zero</h2>
+                    <p>MOV dst, 0 — Synthesized</p>
+                    <div class="codeevolve">
+                        <pre>          <var>...</var></pre>
+                        <pre>          mov variable, 0</pre>
+                        <pre>          <var>...</var></pre>
+                        <pre>          hlt</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>variable: db 42  <var>; will become 0</var></pre>
+                    </div>
+                    <div class="centerarrow fragment fade-right" data-fragment-index="1">➔</div>
+                    <div class="codeevolve right fragment fade-right" data-fragment-index="1">
+                        <pre>          <var>...</var></pre>
+                        <pre class="fragment fade-out blue" data-fragment-index="2">          mov variable, 0</pre>
+                        <pre class="fragment fade-left" data-fragment-index="2">          sub variable, variable</pre>
+                        <pre>          <var>...</var></pre>
+                        <pre>          hlt</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>variable: db 42  <var>; will become 0</var></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Negate</h2>
+                    <p>NEG dst, src — Synthesized</p>
+                    <div class="codeevolve">
+                        <pre>          <var>...</var></pre>
+                        <pre>          neg dst, src</pre>
+                        <pre>          <var>...</var></pre>
+                        <pre>          hlt</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>src:      db 42</pre>
+                        <pre>dst:      db 0  <var>; will become -42</var></pre>
+                        <pre>          &nbsp;</pre>
+                    </div>
+                    <div class="centerarrow fragment fade-right" data-fragment-index="1">➔</div>
+                    <div class="codeevolve right fragment fade-right" data-fragment-index="1">
+                        <pre>          <var>...</var></pre>
+                        <pre class="fragment fade-out blue" data-fragment-index="2">          neg dst, src</pre>
+                        <pre class="fragment fade-left"
+                            data-fragment-index="2">          <span class="fragment highlight-blue" data-fragment-index="3">mov dst, 0</span></pre>
+                        <pre class="fragment fade-left" data-fragment-index="2">          sub dst, src</pre>
+                        <pre>          <var>...</var></pre>
+                        <pre>          hlt</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>src:      db 42</pre>
+                        <pre>dst:      db 0  <var>; will become -42</var></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Add</h2>
+                    <p>ADD dst, src — Synthesized</p>
+                    <div class="codeevolve">
+                        <pre>          <var>...</var></pre>
+                        <pre>          add dst, src</pre>
+                        <pre>          <var>...</var></pre>
+                        <pre>          hlt</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>src:      db 42</pre>
+                        <pre>dst:      db 7  <var>; will become 49</var></pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>          &nbsp;</pre>
+                    </div>
+                    <div class="centerarrow fragment fade-right" data-fragment-index="1">➔</div>
+                    <div class="codeevolve right fragment fade-right" data-fragment-index="1">
+                        <pre>          <var>...</var></pre>
+                        <pre class="fragment fade-out blue" data-fragment-index="2">          add dst, src</pre>
+                        <pre class="fragment fade-left"
+                            data-fragment-index="2">          <span class="fragment highlight-blue" data-fragment-index="3">neg tmp, src</span></pre>
+                        <pre class="fragment fade-left" data-fragment-index="2">          sub dst, src</pre>
+                        <pre>          <var>...</var></pre>
+                        <pre>          hlt</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>src:      db 42</pre>
+                        <pre>dst:      db 7  <var>; will become 49</var></pre>
+                        <pre class="fragment fade-left"
+                            data-fragment-index="2">tmp:      db 0  <var>; will become -42</var></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Move</h2>
+                    <p>MOV dst, src — Synthesized</p>
+                    <div class="codeevolve">
+                        <pre>          <var>...</var></pre>
+                        <pre>          mov dst, src</pre>
+                        <pre>          <var>...</var></pre>
+                        <pre>          hlt</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>src:      db 42</pre>
+                        <pre>dst:      db 0  <var>; will become 42</var></pre>
+                        <pre>          &nbsp;</pre>
+                    </div>
+                    <div class="centerarrow fragment fade-right" data-fragment-index="1">➔</div>
+                    <div class="codeevolve right fragment fade-right" data-fragment-index="1">
+                        <pre>          <var>...</var></pre>
+                        <pre class="fragment fade-out blue" data-fragment-index="2">          mov dst, src</pre>
+                        <pre class="fragment fade-left"
+                            data-fragment-index="2">          <span class="fragment highlight-blue" data-fragment-index="3">mov dst, 0</span></pre>
+                        <pre class="fragment fade-left"
+                            data-fragment-index="2">          <span class="fragment highlight-blue" data-fragment-index="3">add dst, src</span></pre>
+                        <pre>          <var>...</var></pre>
+                        <pre>          hlt</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>src:      db 42</pre>
+                        <pre>dst:      db 0  <var>; will become 42</var></pre>
+                    </div>
+                </section>
+            </section>
+
+            <section class="codesplit">
+                <div>
+                    <div>
+                        <pre><code data-trim class="python" >
+class Machine
+    # ...
+    def subtract(self):
+        dstptr = self.fetch_pointer()
+        srcptr = self.fetch_pointer()
+        self.mem[dstptr] = (self.mem[dstptr] - self.mem[srcptr]) & 0xFF
+
+    def run(self):
+        ops = {
+            0: self.halt,
+            1: self.outputbyte,
+            2: self.branchifplus,
+            3: self.subtract
+        }
+        # ...
+</code></pre>
+                        <p><strong>C-like hints:</strong><br>
+                            -=</p>
+                    </div>
+
+                </div>
+                <div class="coderight">
+                    <h2>Let's<br>code</h2>
+                </div>
+            </section>
+
+
+            <section>
+                <section>
+                    <h2>Milestone #5</h2>
+                    <p>Run a OS image and development environment</p>
+                    <p>Interactive use and output that is not predetermined.</p>
+                </section>
+
+                <section>
+                    <h2>Shift Left</h2>
+                    <p>SHL dst — Synthesized</p>
+                    <p>E.g. %00010101 (21) ➔ %00101010 (42)</p>
+                    <div class="codeevolve">
+                        <pre>          <var>...</var></pre>
+                        <pre>          shl dst</pre>
+                        <pre>          <var>...</var></pre>
+                        <pre>          hlt</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>dst:      db 21  <var>; will become 42</var></pre>
+                        <pre>          &nbsp;</pre>
+                    </div>
+                    <div class="centerarrow fragment fade-right" data-fragment-index="1">➔</div>
+                    <div class="codeevolve right fragment fade-right" data-fragment-index="1">
+                        <pre>          <var>...</var></pre>
+                        <pre class="fragment fade-out blue" data-fragment-index="2">          shl dst</pre>
+                        <pre class="fragment fade-left"
+                            data-fragment-index="2">          <span class="fragment highlight-blue" data-fragment-index="3">add dst, dst</span></pre>
+                        <pre>          <var>...</var></pre>
+                        <pre>          hlt</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>dst:      db 21  <var>; will become 42</var></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Rotate Left</h2>
+                    <p>ROL dst — Synthesized</p>
+                    <p>E.g. %10000010 (130) ➔ %00000101 (5)</p>
+                    <div class="codeevolve">
+                        <pre>          <var>...</var></pre>
+                        <pre>          rol dst</pre>
+                        <pre>          <var>...</var></pre>
+                        <pre>          hlt</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>dst:      db 130  <var>; will become 5</var></pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>          &nbsp;</pre>
+                    </div>
+                    <div class="centerarrow fragment fade-right" data-fragment-index="1">➔</div>
+                    <div class="codeevolve right fragment fade-right" data-fragment-index="1">
+                        <pre>          <var>...</var></pre>
+                        <pre class="fragment fade-out blue" data-fragment-index="2">          rol dst</pre>
+                        <pre class="fragment fade-left" data-fragment-index="2">          bpl high0, dst</pre>
+                        <pre class="fragment fade-left"
+                            data-fragment-index="2">          <span class="fragment highlight-blue" data-fragment-index="3">shl dst</span></pre>
+                        <pre class="fragment fade-left"
+                            data-fragment-index="2">          <span class="fragment highlight-blue" data-fragment-index="3">add dst, one</span></pre>
+                        <pre class="fragment fade-left"
+                            data-fragment-index="2">          <span class="fragment highlight-blue" data-fragment-index="3">jmp continue</span></pre>
+                        <pre class="fragment fade-left"
+                            data-fragment-index="2">high0:    <span class="fragment highlight-blue" data-fragment-index="3">shl dst</span></pre>
+                        <pre><span class="fragment fade-in" data-fragment-index="2">continue:</span> <var>...</var></pre>
+                        <pre>          hlt</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>dst:      db 130  <var>; will become 5</var></pre>
+                        <pre class="fragment fade-left" data-fragment-index="2">one:      db 1</pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Rotate Right</h2>
+                    <p>ROR dst — Synthesized</p>
+                    <p>E.g. %10000010 (130) ➔ %01000001 (65)</p>
+                    <div class="codeevolve">
+                        <pre>          <var>...</var></pre>
+                        <pre>          ror dst</pre>
+                        <pre>          <var>...</var></pre>
+                        <pre>          hlt</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>dst:      db 130  <var>; will become 65</var></pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>          &nbsp;</pre>
+                    </div>
+                    <div class="centerarrow fragment fade-right" data-fragment-index="1">➔</div>
+                    <div class="codeevolve right fragment fade-right" data-fragment-index="1">
+                        <pre>          <var>...</var></pre>
+                        <pre class="fragment fade-out blue" data-fragment-index="2">          ror dst</pre>
+                        <pre class="fragment fade-left"
+                            data-fragment-index="2">          <span class="fragment highlight-blue" data-fragment-index="3">rol dst</span></pre>
+                        <pre class="fragment fade-left"
+                            data-fragment-index="2">          <span class="fragment highlight-blue" data-fragment-index="3">rol dst</span></pre>
+                        <pre class="fragment fade-left"
+                            data-fragment-index="2">          <span class="fragment highlight-blue" data-fragment-index="3">rol dst</span></pre>
+                        <pre class="fragment fade-left"
+                            data-fragment-index="2">          <span class="fragment highlight-blue" data-fragment-index="3">rol dst</span></pre>
+                        <pre class="fragment fade-left"
+                            data-fragment-index="2">          <span class="fragment highlight-blue" data-fragment-index="3">rol dst</span></pre>
+                        <pre class="fragment fade-left"
+                            data-fragment-index="2">          <span class="fragment highlight-blue" data-fragment-index="3">rol dst</span></pre>
+                        <pre class="fragment fade-left"
+                            data-fragment-index="2">          <span class="fragment highlight-blue" data-fragment-index="3">rol dst</span></pre>
+                        <pre>          <var>...</var></pre>
+                        <pre>          hlt</pre>
+                        <pre>          &nbsp;</pre>
+                        <pre>dst:      db 130  <var>; will become 65</var></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Bitwise operations</h2>
+                    <p>AND, OR, XOR, etc</p>
+                    <ol>
+                        <li>Test high bits and handle all logic cases using BPL.</li>
+                        <li>Conditionally add one to result.</li>
+                        <li>Shift input and result left.</li>
+                        <li>Repeat until all 8 bits have been processed.</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <h2>Add with carry</h2>
+                    <p>Wide add, pointer math, etc</p>
+                    <ol>
+                        <li>Move first argument to result.</li>
+                        <li>Add second argument to result.</li>
+                        <li>Add carry-in to result.</li>
+                        <li>Test argument high-bits and result high-bit.</li>
+                        <li>Conditionally set carry-out to zero or one.</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <h2>Self-modifying code</h2>
+                    <p>Peek, Poke, Computed Jump, etc.</p>
+                    <ol>
+                        <li>Calculate pointer address using pointer math.</li>
+                        <li>Apply calculated pointer to memory containing arguments of next operation.</li>
+                        <li>Perform next operation, for example a move or a jump.</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <h2>Switch statements</h2>
+                    <p>Create a branching binary search tree using SUB and BPL</p>
+                </section>
+
+                <section>
+                    <h2>Memory copy</h2>
+                    <ol>
+                        <li>Pointer math</li>
+                        <li>Peek and Poke</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <h2>Stacks</h2>
+                    <ol>
+                        <li>Pointer math</li>
+                        <li>Memory Copy</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <h2>Function Calls</h2>
+                    <ol>
+                        <li>Stacks</li>
+                        <li>Memory Copy</li>
+                        <li>Computed Jumps</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <h2>Creating an OS is a lot of work</h2>
+                    <p>Can we re-use an existing OS and development environment?</p>
+                </section>
+
+                <section>
+                    <h2>Porting an OS is also a lot of work</h2>
+                    <ul>
+                        <li>Create or port a C compiler</li>
+                        <li>Port architecture specific code</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Turing equivalence to the rescue</h2>
+                    <p>Emulating an existing architecture on top of our own.</p>
+                    <p>Running an existing OS inside this emulator.</p>
+                </section>
+
+                <section data-background="images/xzibit.jpg" data-background-transition="slide" class="lefty">
+                    <div>
+                        <h3>YO DAWG</h3>
+                        <p>I HERD YOU LIKE EMULATORS SO WE PUT AN EMULATOR IN YO EMULATOR SO YOU CAN EMULATE WHILE U
+                            EMULATE
+                        </p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Emulating MOS 6502</h2>
+                    <p>Has hardware features our architecture does not have.</p>
+                    <p>No problem, we'll just emulate those.</p>
+                    <ul>
+                        <li>Registers <span class="fragment fade-left green" data-fragment-index="1">➔ Memory</span>
+                        </li>
+                        <li>Flags <span class="fragment fade-in green" data-fragment-index="2">➔ Memory</span></li>
+                        <li>Call stack <span class="fragment fade-in green" data-fragment-index="3">➔ Synthesized
+                                stack</span></li>
+                        <li>Many addressing modes <span class="fragment fade-in green" data-fragment-index="4">➔ Pointer
+                                Math</span></li>
+                    </ul>
+                </section>
+                <section>
+                    <h2>The need to interact</h2>
+                    <p>Without a way to interact with the world, the output from all our programs, including our MOS
+                        6502
+                        emulator will be predetermined.</p>
+                    <p>Our ISA can already write data to output. Now we need it read data from input.</p>
+                </section>
+            </section>
+            <section>
+                <h2>Input Byte (IN)</h2>
+                <p>Read byte from standard input.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Opcode</th>
+                            <th>Mnemonic</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>04 <var>dstptr</var></td>
+                            <td>IN</td>
+                            <td>Input Byte</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>Read byte from input, then write that byte value to <var>dstptr</var>.</p>
+            </section>
+            <section>
+                <section class="codesplit">
+                    <div>
+                        <div>
+                            <pre><code data-trim class="python" >
+    class Machine
+        # ...
+        def inputbyte(self):
+            dstptr = self.fetch_pointer()
+            self.mem[dstptr] = sys.stdin.buffer.read(1)[0]
+
+        def run(self):
+            ops = {
+                0: self.halt,
+                1: self.outputbyte,
+                2: self.branchifplus,
+                3: self.subtract,
+                4: self.inputbyte
+            }
+            # ...
+    </code></pre>
+                            <p><strong>C hints:</strong><br>
+                                getchar()</p>
+                            <p><strong>Node.js hints:</strong><br>
+                                <var>Posix:</var> fs.openSync('/dev/stdin', 'rs'), <var>Windows:</var> process.stdin.fd, fs.readSync(fd, buf, 0, 1, null)</p>
+                            <p><strong>C# hints:</strong><br>
+                                System.Console.OpenStandardInput(), s.ReadByte()</p>
+
+                        </div>
+                    </div>
+                    <div class="coderight">
+                            <h2>Let's<br>code</h2>
+                    </div>
+                </section>
+
+                <section data-background="images/6502-instr.png">
+                    <div class="fragment fade-out white-contrast">
+                        <h3>6502 Instruction Phases</h3>
+                            <ol>
+                                <li><strong>Addressing:</strong> Instruction decoding and calculating effective address</li>
+                                <li><strong>Read:</strong> Where to read value and argument from</li>
+                                <li><strong>ALU Operation:</strong> What calculation to perform</li>
+                                <li><strong>Write:</strong> Where to store the result</li>
+                            </ol>
+                    </div>
+                </section>
+
+                <section data-background="images/addressing.png">
+                    <div class="fragment fade-out white-contrast">
+                        <h3>Emulation loop</h3>
+                        <p>One switch expression for each phase</p>
+                    </div>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h2>The RWa2 ISA</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Opcode</th>
+                                <th>Mnemonic</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>00</td>
+                                <td>HLT</td>
+                                <td>Halt</td>
+                            </tr>
+                            <tr>
+                                <td>01 <var>srcptr</var></td>
+                                <td>OUT</td>
+                                <td>Output Byte</td>
+                            </tr>
+
+                            <tr>
+                                <td>02 <var>jmpptr</var> <var>srcptr</var></td>
+                                <td>BPL</td>
+                                <td>Branch If Plus</td>
+                            </tr>
+                            <tr>
+                                <td>03 <var>dstptr</var> <var>srcptr</var></td>
+                                <td>SUB</td>
+                                <td>Subtract</td>
+                            </tr>
+                            <tr>
+                                <td>04 <var>dstptr</var></td>
+                                <td>IN</td>
+                                <td>Input Byte</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+                <section>
+                    <h2>Turing Equivalence Subset</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Opcode</th>
+                                <th>Mnemonic</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>02 <var>jmpptr</var> <var>srcptr</var></td>
+                                <td>BPL</td>
+                                <td>Branch If Plus</td>
+                            </tr>
+                            <tr>
+                                <td>03 <var>dstptr</var> <var>srcptr</var></td>
+                                <td>SUB</td>
+                                <td>Subtract</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>No input, no output. Halting is implicit.</p>
+                </section>
+                <section>
+                    <h2>One Instruction Set Computer (OSIC)</h2>
+                    <p>Esoteric. Not at all practical.</p>
+                    <p>Example: SUBLEQ</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Instruction</th>
+                                <th>Implementation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>subleq <var>a</var>, <var>b</var>, <var>c</var></td>
+                                <td>mem[<var>b</var>] -= mem[<var>a</var>]<br>
+if (mem[<var>b</var>] &lt;= 0) pc = <var>c</var></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>Negative PC implies halt.</p>
+                </section>
+        
+            </section>
+
+            <section>
+                <section>
+                    <p>Optional</p>
+                    <h2>Milestone #6</h2>
+                    <p>Executable image header and size optimization</p>
+                </section>
+
+                <section>
+                    <h3>Trailing zero bytes</h3>
+                    <pre class="reduced"><code data-trim class="nohighlight hljs" data-noescape>
+<span class="hljs-meta">$</span> od -tx1z -Ax rwa2/4-mos6502.rwa2 | tail
+033ae0 10 e6 5b 5d 0d f6 e4 dc 1b b7 3a 3b 03 00 95 fa  >..[]......:;....&lt;
+033af0 02 00 00 60 ff ff 95 1a 03 00 00 20 ff ff 04 00  >...`....... ....&lt;
+033b00 ff ff ba 05 08 02 04 03 24 ec f7 0e 09 da 0b 0c  >........$.......&lt;
+033b10 f4 e9 df 18 33 e8 13 c1 b6 e7 f2 27 ea 46 de 70  >....3......'.F.p&lt;
+033b20 68 62 6a 69 64 6d 79 71 3f 23 2c 28 29 e1 eb c0  >hbjidmyq?#,()...&lt;
+033b30 80 00 01 00 00 f0 ed 6b 77 75 00 00 00 00 00 00  >.......kwu......&lt;
+033b40 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  >................&lt;
+*
+043b70 00 00                                            >..&lt;
+043b72
+<span class="hljs-meta">$</span> <span class="blinking-cursor">_</span>
+</code></pre>
+                    <p>Used as working memory at runtime.</p>
+                </section>
+            </section>
+    
+
+            <section>
+                <section>
+                    <h3>RW header <span class="fragment fade-in vizrt-color" data-fragment-index="1">and memory layout</span>
+                    </h3>
+                    <table style="font-size: 80%">
+                        <thead>
+                            <tr>
+                                <th>Offset</th>
+                                <th>Size</th>
+                                <th>What</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>0</td>
+                                <td>2</td>
+                                <td>Magic 'RW'</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>1</td>
+                                <td>ISA revision (rev): rev + 97</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>1</td>
+                                <td>Pointer size (ps): Log2(ps) + 48</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>ps</td>
+                                <td>End of file (eof) pointer, .BSS segment start</td>
+                            </tr>
+                            <tr>
+                                <td>4+ps</td>
+                                <td>ps</td>
+                                <td>End of memory (eom) pointer, .BSS segment end</td>
+                            </tr>
+                            <tr>
+                                <td>4+2*ps</td>
+                                <td>eof-(4+2*ps)</td>
+                                <td>.TEXT segment, executable code and data</td>
+                            </tr>
+                            <tr class="fragment fade-in vizrt-color" data-fragment-index="1">
+                                <td>eof</td>
+                                <td>eom-eof</td>
+                                <td>Zero initialized runtime memory (.BSS segment)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </section>
+
+                <section data-background="images/mark-zbikowski.jpg" data-background-transition="slide" class="lefty">
+                    <div>
+                        <h3>Header Magic Signature</h3>
+                        <p>DOS MZ executables are identified by ASCII characters '<strong>M</strong>' and
+                            '<strong>Z</strong>' at the start of the file</p>
+                        <p><strong>M</strong>ark <strong>Z</strong>bikowski was one of leading developers of MS-DOS</p>
+                    </div>
+                </section>
+
+
+                <section>
+                    <h2>.BSS section</h2>
+                    <p>Named after <strong>Block Started by Symbol</strong> from the <strong>United Aircraft Symbolic
+                            Assembly Program</strong> and documented by MIT in 1957.</p>
+                    <p>Describes a segment of memory initialized to zeros. Executable image only stores the length of
+                        the segment, not the zero bytes themselves.</p>
+                </section>
+
+                <section>
+                    <h3>Impact on executable size</h3>
+                    <table style="font-size: 80%">
+                        <thead>
+                            <tr>
+                                <th>Executable</th>
+                                <th>RWa2</th>
+                                <th>RWb2</th>
+                                <th>Delta</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>0-true</td>
+                                <td>1</td>
+                                <td>13</td>
+                                <td>+12</td>
+                            </tr>
+                            <tr>
+                                <td>1-hello</td>
+                                <td>76</td>
+                                <td>88</td>
+                                <td>+12</td>
+                            </tr>
+                            <tr>
+                                <td>1-test</td>
+                                <td>245</td>
+                                <td>257</td>
+                                <td>+12</td>
+                            </tr>
+                            <tr>
+                                <td>2-test</td>
+                                <td>1760</td>
+                                <td>1772</td>
+                                <td>+12</td>
+                            </tr>
+                            <tr>
+                                <td>3-fizz</td>
+                                <td>922</td>
+                                <td>927</td>
+                                <td>+5</td>
+                            </tr>
+                            <tr>
+                                <td>3-test</td>
+                                <td>14065</td>
+                                <td>14062</td>
+                                <td>-3</td>
+                            </tr>
+                            <tr>
+                                <td>4-mos6502</td>
+                                <td>277365</td>
+                                <td>211782</td>
+                                <td>-65583</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </section>
+            </section>
+            <section>
+                <section class="codesplit">
+                    <div>
+                        <div>
+                            <pre><code data-trim class="python" >
+    def read_pointer(mem, offset):
+        ptr = 0
+        for i in range(4):
+            ptr = ptr + (mem[offset] &lt;&lt; (i * 8))
+            offset = offset + 1
+        return ptr
+
+    class Machine:
+        # ...
+        def fetch_pointer(self):
+            ptr = read_pointer(self.mem, self.pc)
+            self.pc = self.pc + 4
+            return ptr
+
+    # ...
+    assert memory[0:2] == b"RW"
+
+    isa_revision = memory[2] - 97
+    pointer_size = 1 &lt;&lt; (memory[3] - 48)
+
+    assert isa_revision == 1
+    assert pointer_size == 4
+
+    eof = read_pointer(memory, 4)
+    eom = read_pointer(memory, 4 + pointer_size)
+    fullmem = memory[0:eof] + bytearray(eom - eof)
+    pc = 4 + 2 * pointer_size
+    vm = Machine(fullmem, pc)
+    vm.run()
+</code></pre>
+                            <p><strong>C hints:</strong><br>
+                                realloc(ptr, size), memset(ptr, 0, size)</p>
+                            <p><strong>Node.js hints:</strong><br>
+                                require('assert'), buf.slice(offs, size), Buffer.concat([bufs], size)</p>
+                        </div>
+
+                    </div>
+                    <div class="coderight">
+                        <h2>Let's<br>code</h2>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Run executables directly from Linux host</h3>
+                    <p>binfmt_misc</p>
+                    <pre class="reduced"><code data-trim class="nohighlight hljs" data-noescape>
+<span class="hljs-meta">$</span> ./vm-rwb2 rwb2/1-hello.rwb2
+Hello World!
+<span class="hljs-meta">$</span> rwb2/1-hello.rwb2
+-bash: rwb2/1-hello.rwb2: cannot execute binary file: Exec format error
+<span class="hljs-meta">$</span> <span class="blinking-cursor fragment fade-out" data-fragment-index="1">_</span>
+<span class="fragment" data-fragment-index="1"><span class="hljs-meta">$</span> reg=":RWb2:M::RWb2::$(realpath vm-rwb2):"
+<span class="hljs-meta">$</span> sudo sh -c "echo $reg > /proc/sys/fs/binfmt_misc/register"
+<span class="hljs-meta">$</span> <span class="blinking-cursor fragment fade-out" data-fragment-index="2">_</span>
+<span class="fragment" data-fragment-index="2"><span class="hljs-meta">$</span> rwb2/1-hello.rwb2
+Hello World!
+<span class="hljs-meta">$</span> <span class="blinking-cursor">_</span></span>
+</code></pre>
+                </section>
+            </section>
+
+
+            <section>
+                <section>
+                    <p>Optional</p>
+                    <h2>Milestone #7</h2>
+                    <p>Optimizing ISA for performance</p>
+                </section>
+        
+                <section>
+                    <h2>Instrumentation</h2>
+                    <pre><code data-trim class="tiny nohighlight hljs">
+672678384   Subtract
+    286188345   [SetZero]/Subtract
+    154388235   Negate/Subtract
+    148111208   Add/Subtract
+    72379445    [SubtractConstant]/Subtract
+    8213954     PeekSelfModifySubtract/Subtract
+    1724479     IfEqual/Subtract
+    809420      PokeSelfModify/Subtract
+    667618      CarrySubtract/Subtract
+    134598      .../Subtract
+    61046       JumpIfZeroOrLess/Subtract
+    36          JumpIfEqual/Subtract
+
+528603759   ReadByteAndAdvance
+    45759844    ReadByteAndAdvance/Read6502Memory/LoadAddressWithOffset/AddPointersSynth/AddWide4,4/CarryAdd/BranchIfPlus
+    35540339    ReadByteAndAdvance/Read6502Memory/AddPointersSynth/AddWide4,2/CarryAdd/BranchIfPlus
+    26234056    ReadByteAndAdvance/Read6502Memory/AddPointersSynth/AddWide4,2/CarryAdd/Add/Negate/[SetZero]/Subtract
+    26234056    ReadByteAndAdvance/Read6502Memory/AddPointersSynth/AddWide4,2/CarryAdd/Add/Negate/Subtract
+    26234056    ReadByteAndAdvance/Read6502Memory/AddPointersSynth/AddWide4,2/CarryAdd/Add/Subtract
+    24408880    ReadByteAndAdvance/Read6502Memory/LoadAddressWithOffset/AddPointersSynth/AddWide4,4/CarryAdd/Add/Negate/[SetZero]/Subtract
+    24408880    ReadByteAndAdvance/Read6502Memory/LoadAddressWithOffset/AddPointersSynth/AddWide4,4/CarryAdd/Add/Negate/Subtract
+    24408880    ReadByteAndAdvance/Read6502Memory/LoadAddressWithOffset/AddPointersSynth/AddWide4,4/CarryAdd/Add/Subtract
+    18101247    ReadByteAndAdvance/IncrementPointer/IncrementWide2/AddWideByteConstant2/AddWide2,1/CarryAdd/BranchIfPlus
+    13117028    ReadByteAndAdvance/Read6502Memory/PeekSelfModifySubtract/InitializeDynamicPointer/Move/[SetZero]/Subtract
+    13117028    ReadByteAndAdvance/Read6502Memory/PeekSelfModifySubtract/InitializeDynamicPointer/Move/Add/Negate/[SetZero]/Subtract
+    13117028    ReadByteAndAdvance/Read6502Memory/PeekSelfModifySubtract/InitializeDynamicPointer/Move/Add/Negate/Subtract
+    13117028    ReadByteAndAdvance/Read6502Memory/PeekSelfModifySubtract/InitializeDynamicPointer/Move/Add/Subtract
+    13117028    ReadByteAndAdvance/IncrementPointer/IncrementWide2/AddWideByteConstant2/AddWide2,1/CarryAdd/Add/Negate/[SetZero]/Subtract
+    13117028    ReadByteAndAdvance/IncrementPointer/IncrementWide2/AddWideByteConstant2/AddWide2,1/CarryAdd/Add/Negate/Subtract
+    13117028    ReadByteAndAdvance/IncrementPointer/IncrementWide2/AddWideByteConstant2/AddWide2,1/CarryAdd/Add/Subtract
+    12432947    ReadByteAndAdvance/Read6502Memory/JumpTableSearch/BranchIfPlus
+    12204440    ReadByteAndAdvance/Read6502Memory/LoadAddressWithOffset/LoadAddress/Move/[SetZero]/Subtract
+    12204440    ReadByteAndAdvance/Read6502Memory/LoadAddressWithOffset/LoadAddress/Move/Add/Negate/[SetZero]/Subtract
+    12204440    ReadByteAndAdvance/Read6502Memory/LoadAddressWithOffset/LoadAddress/Move/Add/Negate/Subtract
+    12204440    ReadByteAndAdvance/Read6502Memory/LoadAddressWithOffset/LoadAddress/Move/Add/Subtract
+    9153330     ReadByteAndAdvance/Read6502Memory/JumpTableSearch/[SubtractConstant]/Subtract
+    9149927     ReadByteAndAdvance/Read6502Memory/LoadAddressWithOffset/AddPointersSynth/AddWide4,4/CarryAdd/MoveConstant/[SetZero]/Subtract
+    9149927     ReadByteAndAdvance/Read6502Memory/LoadAddressWithOffset/AddPointersSynth/AddWide4,4/CarryAdd/MoveConstant/[SubtractConstant]/Subtract
+    8157169     ReadByteAndAdvance/Read6502Memory/AddPointersSynth/AddWide4,2/CarryAdd/[SetZero]/Subtract
+    6558514     ReadByteAndAdvance/Read6502Memory/CopyBytes2,2/Move/[SetZero]/Subtract
+    6558514     ReadByteAndAdvance/Read6502Memory/CopyBytes2,2/Move/Add/Negate/[SetZero]/Subtract
+    6558514     ReadByteAndAdvance/Read6502Memory/CopyBytes2,2/Move/Add/Negate/Subtract
+    6558514     ReadByteAndAdvance/Read6502Memory/CopyBytes2,2/Move/Add/Subtract
+    6558514     ReadByteAndAdvance/Read6502Memory/PeekSelfModifySubtract/[SetZero]/Subtract                        
+                    </code></pre>
+                </section>
+                <section>
+                    <h3>Instruction Candidates</h3>
+                    <table style="font-size: 80%">
+                        <thead>
+                            <tr>
+                                <th>Mnemonic</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>ADC</td>
+                                <td>Add With Carry</td>
+                            </tr>
+                            <tr>
+                                <td>MOV</td>
+                                <td>Move Byte</td>
+                            </tr>
+
+                            <tr>
+                                <td>BEQ</td>
+                                <td>Branch If Zero</td>
+                            </tr>
+                            <tr>
+                                <td>MOV <var>dst</var>, [<var>src</var>]</td>
+                                <td>Peek</td>
+                            </tr>
+                            <tr>
+                                <td>ADD.P</td>
+                                <td>Add pointers</td>
+                            </tr>
+                            <tr>
+                                <td>MOV.P</td>
+                                <td>Move pointer</td>
+                            </tr>
+                            <tr>
+                                <td>ADD</td>
+                                <td>Add</td>
+                            </tr>
+                            <tr>
+                                <td>MOV [<var>dst</var>], <var>src</var></td>
+                                <td>Poke</td>
+                            </tr>
+                            <tr>
+                                <td>JMP [<var>src</var>]</td>
+                                <td>Indirect Jump</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+                <section data-background="images/test-extensions.png" data-background-transition="slide" class="lefty">
+                    <div>
+                        <h3>Test instruction candidates</h3>
+                        <p>Create compiler backend that optionally build programs with more efficient instructions</p>
+                    </div>
+                </section>
+                <section>
+                    <h3>Benchmarking Candidates</h3>
+                    <img class="chart" src="images/ext1-chart.svg">
+                </section>
+
+                <section>
+                    <h3>Add With Carry (ADC) + ...</h3>
+                    <img class="chart" src="images/ext2-chart.svg">
+                </section>
+
+
+                <section>
+                    <h3>Move Byte (MOV) + ...</h3>
+                    <img class="chart" src="images/ext3-chart.svg">
+                </section>
+
+                <section>
+                    <h3>Observations</h3>
+                    <ul>
+                        <li>We've picked the three instructions ADC, MOV and ADD.P.</li>
+                        <li>We're seeing diminishing returns.</li>
+                        <li>We're now up to eight instructions, which is a nice round number.</li>
+                        <li>ADC and ADD.P overlap in functionality.</li>
+                        <li>We can't be sure we've picked the best three instructions.</li>    
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Finding the best combination of instructions</h3>
+                    <p>Counting cycles for each combination</p>
+                    <pre><code data-trim class="nohighlight hljs" data-noescape>
+<span class="hljs-meta">$</span> sort -n -t, stats.txt | head -10
+245928323,mov,beq,add.p
+247352189,mov,peek,add.p
+248719719,mov,add.p,mov.p
+261993835,mov,add.p,add
+262161257,mov,add.p,poke
+262471893,adc,mov,add.p
+283983831,adc,mov,beq
+285407697,adc,mov,peek
+286775227,adc,mov,mov.p
+300216765,adc,mov,poke
+<span class="hljs-meta">$</span> <span class="blinking-cursor">_</span>
+</code></pre>
+                </section>
+                <section>
+                    <h2>Move Byte (MOV)</h2>
+                    <p>Copy byte value from another byte</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Opcode</th>
+                                <th>Mnemonic</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>05 <var>dstptr</var> <var>srcptr</var></td>
+                                <td>MOV</td>
+                                <td>Move Byte</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>Read byte value from <var>srcptr</var>, then write the value to <var>dstptr</var>.</p>
+                </section>
+                <section>
+                    <h2>Branch If Zero (BEQ)</h2>
+                    <p>Jump if a byte is zero</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Opcode</th>
+                                <th>Mnemonic</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>06 <var>jmpptr</var> <var>srcptr</var></td>
+                                <td>BEQ</td>
+                                <td>Branch If Zero</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>Read byte from address <var>srcptr</var>, if it is zero set PC to <var>jmpptr</var> address.</p>
+                </section>
+                <section>
+                    <h2>Add Pointers (ADD.P)</h2>
+                    <p>Copy byte value from another byte</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Opcode</th>
+                                <th>Mnemonic</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>07 <var>dstptr</var> <var>srcptr</var></td>
+                                <td>ADD.P</td>
+                                <td>Add Pointers</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>Read pointer value from <var>dstptr</var>, add pointer value from <var>srcptr</var>, then write the pointer value to <var>dstptr</var>.</p>
+                </section>
+            </section>
+            <section>
+                <section>
+                    <h2>The RWc ISA</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Opcode</th>
+                                <th>Mnemonic</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>00</td>
+                                <td>HLT</td>
+                                <td>Halt</td>
+                            </tr>
+                            <tr>
+                                <td>01 <var>srcptr</var></td>
+                                <td>OUT</td>
+                                <td>Output Byte</td>
+                            </tr>
+
+                            <tr>
+                                <td>02 <var>jmpptr</var> <var>srcptr</var></td>
+                                <td>BPL</td>
+                                <td>Branch If Plus</td>
+                            </tr>
+                            <tr>
+                                <td>03 <var>dstptr</var> <var>srcptr</var></td>
+                                <td>SUB</td>
+                                <td>Subtract</td>
+                            </tr>
+                            <tr>
+                                <td>04 <var>dstptr</var></td>
+                                <td>IN</td>
+                                <td>Input Byte</td>
+                            </tr>
+                            <tr>
+                                <td>05 <var>dstptr</var> <var>srcptr</var></td>
+                                <td>MOV</td>
+                                <td>Move Byte</td>
+                            </tr>
+                            <tr>
+                                <td>06 <var>jmpptr</var> <var>srcptr</var></td>
+                                <td>BEQ</td>
+                                <td>Branch If Zero</td>
+                            </tr>
+                            <tr>
+                                <td>07 <var>dstptr</var> <var>srcptr</var></td>
+                                <td>ADD.P</td>
+                                <td>Add Pointers</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+                <section>
+                    <h3>Impact on executable size</h3>
+                    <table style="font-size: 80%">
+                        <thead>
+                            <tr>
+                                <th>Executable</th>
+                                <th>RWa2</th>
+                                <th>RWb2</th>
+                                <th>RWc2</th>
+                                <th>Delta</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>0-true</td>
+                                <td>1</td>
+                                <td>13</td>
+                                <td>13</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>1-hello</td>
+                                <td>76</td>
+                                <td>88</td>
+                                <td>88</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>1-test</td>
+                                <td>245</td>
+                                <td>257</td>
+                                <td>257</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>2-test</td>
+                                <td>1760</td>
+                                <td>1772</td>
+                                <td>1772</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>3-fizz</td>
+                                <td>922</td>
+                                <td>927</td>
+                                <td>657</td>
+                                <td>-270</td>
+                            </tr>
+                            <tr>
+                                <td>3-test</td>
+                                <td>14065</td>
+                                <td>14062</td>
+                                <td>10272</td>
+                                <td>-3790</td>
+                            </tr>
+                            <tr>
+                                <td>4-mos6502</td>
+                                <td>277365</td>
+                                <td>211782</td>
+                                <td>80872</td>
+                                <td>-130910</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </section>
+                <section>
+                    <h3>Impact on performance</h3>
+                    <img class="chart" src="images/isa-performance.svg" style="width: 80%;">
+                </section>
+            </section>
+            <section>
+                <h1>Now what?</h1>
+                <p>We have an embryonic ISA and VM.</p>
+                <p>What else can we do?</p>
+            </section>
+
+            <section>
+                <section>
+                    <h2>Modern ISA Design</h2>
+                    <ul>
+                        <li>Registers</li>
+                        <li>Stack instructions</li>
+                        <li>More addressing modes</li>
+                        <li>Function call and return</li>
+                        <li>Interrupts</li>
+                        <li>Memory Management Unit (MMU)</li>
+                        <li>Privileged Modes</li>
+                        <li>Single Instruction Multiple Data (SIMD)</li>
+                        <li class="fragment fade-left vizrt-color">(Flags and speculation)</li>
+                    </ul>
+                </section>
+                <section>
+                    <img class="plain" style="width: 50%" src="https://upload.wikimedia.org/wikipedia/commons/6/6b/RISC-V-logo-square.svg">
+                    <p><a href="https://riscv.org/">riscv.org</a></p>
+                </section>                    
+            </section>
+
+            <section>
+                <h2>Device I/O</h2>
+                <ul>
+                    <li>Timer</li>
+                    <li>Display</li>
+                    <li>Keyboard</li>
+                    <li>Storage</li>
+                </ul>
+            </section>
+
+            <section>
+                <section>
+                    <h2>User space VM</h2>
+                    <ul>
+                        <li>Concurrency</li>
+                        <li>Syscalls</li>
+                        <li>Dynamic memory allocation</li>
+                        <li>Filesystem</li>
+                        <li>Networking</li>
+                        <li>Async I/O</li>
+                    </ul>
+                </section>
+                <section>
+                    <img class="plain" style="width: 60%" src="https://raw.githubusercontent.com/WebAssembly/web-assembly-logo/master/dist/logo/web-assembly-logo.png">
+                    <ul class="squeezed">
+                        <li>Web Assembly: <a href="https://webassembly.org/">https://webassembly.org/</a></li>
+                        <li>Reference: <a href="https://github.com/sunfishcode/wasm-reference-manual/blob/master/WebAssembly.md">https://github.com/sunfishcode/wasm-reference-manual/blob/master/WebAssembly.md</a></li>
+                    </ul>
+                </section>
+                <section>
+                    <img class="plain" style="width: 60%" src="images/dotnetcore.png">
+                    <ul class="squeezed">
+                        <li>CLR: <a href="https://github.com/dotnet/coreclr">https://github.com/dotnet/coreclr</a></li>
+                        <li>CIL: <a href="https://en.wikipedia.org/wiki/Common_Intermediate_Language">https://en.wikipedia.org/wiki/Common_Intermediate_Language</a></li>
+                    </ul>
+                </section>
+                <section>
+                        <img class="plain" style="width: 70%" src="https://upload.wikimedia.org/wikipedia/commons/1/18/OpenJDK_logo.svg">
+                        <ul class="squeezed">
+                            <li>OpenJDK: <a href="https://hg.openjdk.java.net/jdk/jdk12/">https://hg.openjdk.java.net/jdk/jdk12/</a></li>
+                            <li>JVM Spec: <a href="https://docs.oracle.com/javase/specs/jvms/se11/html/index.html">https://docs.oracle.com/javase/specs/jvms/se11/html/index.html</a></li>
+                        </ul>
+                    </section>
+                
+            </section>
+
+            <section>
+                <section>
+                    <h2>System Emulation</h2>
+                    <ul>
+                        <li>Virtualization of modern systems</li>
+                        <li>Vintage computing virtualization</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <img class="plain" style="width: 70%" src="https://git.qemu.org/?p=qemu.git;a=blob_plain;f=pc-bios/qemu_logo.svg;hb=HEAD">
+                    <ul class="squeezed">
+                        <li>QEMU: <a href="https://git.qemu.org/git/qemu.git/">https://git.qemu.org/git/qemu.git/</a></li>
+                        <li>Tiny Code Generator: <a href="https://wiki.qemu.org/Documentation/TCG">https://wiki.qemu.org/Documentation/TCG</a></li>
+                    </ul>
+                </section>
+                <section>
+                    <ul class="squeezed">
+                        <li>JSLinux: <a href="https://bellard.org/jslinux/">https://bellard.org/jslinux/</a></li>
+                        <li>MAME: <a href="https://github.com/mamedev/mame/">https://github.com/mamedev/mame/</a></li>
+                        <li>MAME CPUs: <a href="https://github.com/mamedev/mame/tree/master/src/devices/cpu">https://github.com/mamedev/mame/tree/master/src/devices/cpu</a></li>
+                        <li>VICE: <a href="https://sourceforge.net/p/vice-emu/code/HEAD/tree/trunk/vice/">https://sourceforge.net/p/vice-emu/code/HEAD/tree/trunk/vice/</a></li>
+                        <li>8086tiny: <a href="https://ioccc.org/2013/cable3/hint.html">https://ioccc.org/2013/cable3/hint.html</a></li>
+                        <li>IOCCC entry: <a href="https://ioccc.org/2013/cable3/cable3.c">https://ioccc.org/2013/cable3/cable3.c</a></li>
+                        <li>Deobfuscated: <a href="https://github.com/adriancable/8086tiny">https://github.com/adriancable/8086tiny</a></li>
+                    </ul>
+                </section>
+            </section>
+
+            <section>                
+                <section>
+                    <h2>Hardware implementation</h2>
+                    <ul>
+                        <li>Hardware Description Languag (HDL)</li>
+                        <li>Field Programmable Gate Array (FPGA)</li>
+                        <li>Application-specific Integrated Circuit (ASIC)</li>
+                        <li>Pipelining</li>
+                        <li>Microcode</li>
+                    </ul>    
+                </section>
+                <section>
+                    <ul class="squeezed">
+                        <li>VHDL/Verilog: <a href="https://opencores.org/howto/eda">https://opencores.org/howto/eda</a></li>
+                        <li><a href="https://hackaday.com/2018/08/20/cheap-fpga-board-roundup/">https://hackaday.com/2018/08/20/cheap-fpga-board-roundup/</a></li>
+                        <li><a href="https://bitwise.handmade.network/">https://bitwise.handmade.network/</a></li>
+                    </ul>        
+                </section>
+            </section>
+            <section>
+                <section>
+                    <h2>Special purpose ISAs</h2>
+                    <ul>
+                        <li>GPU Intermediate Representation</li>
+                        <li>Soft CPUs</li>
+                        <li>One Instruction Set Computer (OSIC)</li>
+                    </ul>
+                </section>            
+                <section>
+                    <img class="plain" style="width: 70%" src="images/spir-logo.svg">
+                    <p class="squeezed"><a href="https://www.khronos.org/registry/spir-v/papers/WhitePaper.html">https://www.khronos.org/registry/spir-v/papers/WhitePaper.html</a></p>
+                </section>                    
+                <section>
+                    <ul class="squeezed">
+                        <li>ZPU Softcore: <a href="https://github.com/zylin/zpu">https://github.com/zylin/zpu</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/ZPU_(microprocessor)">https://en.wikipedia.org/wiki/ZPU_(microprocessor)</a></li>
+                        <li><a href="https://excamera.com/sphinx/fpga-j1.html">https://excamera.com/sphinx/fpga-j1.html</a></li>
+                        <li><a href="https://esolangs.org/wiki/OISC">https://esolangs.org/wiki/OISC</a></li>
+                    </ul>        
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h2>Full OS</h2>
+                    <ul>
+                        <li>Kernel and device drivers</li>
+                        <li>Port Linux Kernel</li>
+                        <li>Build Linux user space tool chain</li>
+                    </ul>
+                </section>
+                <section>
+                    <ul class="squeezed">
+                        <li>Linux Kernel: <a href="https://www.kernel.org/">https://www.kernel.org/</a></li>
+                        <li>Port GCC: <a href="https://kristerw.blogspot.com/2017/08/writing-gcc-backend_4.html">https://kristerw.blogspot.com/2017/08/writing-gcc-backend_4.html</a></li>
+                        <li>Port Linux: <a href="https://lwn.net/Articles/654783/">https://lwn.net/Articles/654783/</a></li>
+                        <li>Build user space: <a href="https://buildroot.org/">https://buildroot.org/</a></li>
+                    </ul>        
+                </section>                    
+            </section>
+
+            <section>
+                <section>
+                    <h2>Self-hosting</h2>
+                    <ul>
+                        <li>Bootstrap environment</li>
+                        <li>Emulate itself — VM in VM already done</li>
+                        <li>Build itself — Need compiler</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <ul class="squeezed">
+                        <li>Bootstrapping: <a href="https://bootstrapping.miraheze.org/">https://bootstrapping.miraheze.org/</a></li>
+                        <li>C4 compiler: <a href="https://github.com/rswier/c4/blob/master/c4.c">https://github.com/rswier/c4/blob/master/c4.c</a></li>
+                        <li>swieros: <a href="https://github.com/rswier/swieros">https://github.com/rswier/swieros</a></li>
+                    </ul>        
+                </section>
+            </section>
+    
+            <section data-background-video="https://virzrtakamai.azureedge.net/Dmm3BWSV3/assetstream.aspx?assetid=2763&mediaformatid=50039&destinationid=10016&accesskey=1e321aa6-fb07-44d1-93bc-7c4de0ce5743" data-background-video-loop="true" data-background-video-muted="true">
+                <div class="white-contrast">
+                    <h3>We're Hiring</h3>
+                    <p><a href="https://www.vizrt.com/">https://www.vizrt.com/</a></p>
+                </div>
+        </section>
+        </div>
+    </div>
+    <div class="bug" id="bug"></div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+        // More info about config & dependencies:
+        // - https://github.com/hakimel/reveal.js#configuration
+        // - https://github.com/hakimel/reveal.js#dependencies
+        Reveal.initialize({
+            dependencies: [
+                { src: 'plugin/markdown/marked.js' },
+                { src: 'plugin/markdown/markdown.js' },
+                { src: 'plugin/notes/notes.js', async: true },
+                { src: 'plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } }
+            ],
+            history: true,
+            slideNumber: true
+        });
+    </script>
+</body>
+
+</html>
