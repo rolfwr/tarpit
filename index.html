@@ -248,7 +248,7 @@
             </section>
             <section>
                 <div style="height: 100px;"></div>
-                <h3>Today we're going to</h3>
+                <h3>Today we’re going to</h3>
                 <ul>
                     <li>Design an instruction set</li>
                     <li>Build a virtual machine</li>
@@ -267,7 +267,7 @@
                 <ul>
                     <li>Grab the archive of executable images from <a href="http://rolfwr.net/rwisa/rwisa-exe.zip">http://rolfwr.net/rwisa/rwisa-exe.zip</a></li>
                     <li>Choose your preferred programming language.</li>
-                    <li>Prepare a simple "Hello World" console application to start building upon.</li>
+                    <li>Prepare a simple “Hello World” console application to start building upon.</li>
                     <li>If you get stuck, refer to example implementations at <a href="https://github.com/rolfwr/rwisa-vm">https://github.com/rolfwr/rwisa-vm</a></li>
                     <li>Slides at <a href="http://rolfwr.net/tarpit">http://rolfwr.net/tarpit</a></li>
                 </ul>
@@ -291,7 +291,7 @@
                 <section>
                     <h2>Executable Images</h2>
                     <p>Header vs headerless formats</p>
-                    <p class="fragment fade-left">For now, let's choose headerless for simplicity.</p>
+                    <p class="fragment fade-left">For now, let’s choose headerless for simplicity.</p>
                 </section>
                 <section>
                     <h3>Executable formats with headers</h3>
@@ -332,8 +332,8 @@
                     <h3>Executable formats without headers</h3>
                     <p>.COM executable hex dump</p>
                     <pre><code data-trim class="nohighlight hljs" data-noescape>
-<span class="hljs-meta">0E 1F BA 0E 01 B4 09 CD 21 B8 01 4C CD 21 48 65</span>   ........!..L.!He
-<span class="hljs-meta">6C 6C 6F 20 57 6F 72 6C 64 21 0D 0D 0A 24</span>         llo.World!...$
+<span class="hljs-meta">0E 1F BA 0E 01 B4 09 CD 21 B8 01 4C CD 21 48 65</span> ........!..L.!He
+<span class="hljs-meta">6C 6C 6F 20 57 6F 72 6C 64 21 0D 0D 0A 24</span>       llo.World!...$
 </code></pre>
                     <div class="fragment fade-left">
                         <p>Assembly</p>
@@ -520,10 +520,18 @@ while True:
 
                     </div>
                     <div>
-                        <h2>Let's<br>code</h2>
+                        <h2>Let’s<br>code</h2>
                     </div>
                 </section>
 
+                <section>
+                    <h3>Running example binary</h3>
+                    <pre><code data-trim class="nohighlight hljs" data-noescape>
+<span class="hljs-meta">$</span> <var>vm</var> rwa2/0-true.rwa2
+<span class="hljs-meta">$</span> <span class="blinking-cursor">_</span>
+</code></pre>
+                    <p>Replace <var>vm</var> with the command to run your virtual machine implementation.</p>
+                </section>
 
 
                 <section data-background="images/manchester_baby.jpg" data-background-transition="slide" class="righty">
@@ -693,8 +701,24 @@ vm.run()
 
                     </div>
                     <div class="coderight">
-                        <h2>Let's<br>code</h2>
+                        <h2>Let’s<br>code</h2>
                     </div>
+                </section>
+
+                <section>
+                    <h3>Running example binaries</h3>
+                    <pre><code data-trim class="nohighlight hljs" data-noescape>
+<span class="hljs-meta">$</span> <var>vm</var> rwa2/1-hello.rwa2
+Hello World!
+<span class="hljs-meta">$</span>
+<span class="hljs-meta">$</span> <var>vm</var> rwa2/1-test.rwa2
+TAP version 13
+1..1
+ok 1 - Implements OUT.
+
+<span class="hljs-meta">$</span> <span class="blinking-cursor">_</span>
+</code></pre>
+                    <p>Replace <var>vm</var> with the command to run your virtual machine implementation.</p>
                 </section>
 
 
@@ -813,10 +837,12 @@ vm.run()
                 </section>
             </section>
 
-            <section class="codesplit">
-                <div>
+            <section>
+
+                <section class="codesplit">
                     <div>
-                        <pre><code data-trim class="python" >
+                        <div>
+                            <pre><code data-trim class="python" >
 class Machine
     # ...
     def branchifplus(self):
@@ -832,14 +858,39 @@ class Machine
             2: self.branchifplus
         }
 </code></pre>
-                        <p><strong>C-like hints:</strong><br>
-                            if (x &lt; 128)</p>
-                        </div>
+                            <p><strong>C-like hints:</strong><br>
+                                if (x &lt; 128)</p>
+                            </div>
 
-                </div>
-                <div class="coderight">
-                    <h2>Let's<br>code</h2>
-                </div>
+                    </div>
+                    <div class="coderight">
+                        <h2>Let’s<br>code</h2>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Running example binary</h3>
+                    <pre><code data-trim class="nohighlight hljs" data-noescape>
+<span class="hljs-meta">$</span> <var>vm</var> rwa2/2-test.rwa2
+TAP version 13
+1..10
+ok 1 - Implements OUT.
+ok 2 - BPL 0 jumps
+ok 3 - BPL 1 jumps
+ok 4 - BPL 126 jumps
+ok 5 - BPL 127 jumps
+ok 6 - BPL 128 does not jump
+ok 7 - BPL 129 does not jump
+ok 8 - BPL 254 does not jump
+ok 9 - BPL 255 does not jump
+ok 10 - Synthesized Jump unconditionally
+
+<span class="hljs-meta">$</span> <span class="blinking-cursor">_</span>
+</code></pre>
+                    <p>Replace <var>vm</var> with the command to run your virtual machine implementation.</p>
+                </section>
+
+
             </section>
 
             <section>
@@ -983,17 +1034,18 @@ class Machine
                     </div>
                 </section>
             </section>
-
-            <section class="codesplit">
-                <div>
+            <section>
+                <section class="codesplit">
                     <div>
-                        <pre><code data-trim class="python" >
+                        <div>
+                            <pre><code data-trim class="python" >
 class Machine
     # ...
     def subtract(self):
         dstptr = self.fetch_pointer()
         srcptr = self.fetch_pointer()
-        self.mem[dstptr] = (self.mem[dstptr] - self.mem[srcptr]) & 0xFF
+        result = (self.mem[dstptr] - self.mem[srcptr]) & 0xFF
+        self.mem[dstptr] = result
 
     def run(self):
         ops = {
@@ -1004,16 +1056,34 @@ class Machine
         }
         # ...
 </code></pre>
-                        <p><strong>C-like hints:</strong><br>
-                            -=</p>
+                            <p><strong>C-like hints:</strong><br>
+                                -=</p>
+                        </div>
+
                     </div>
-
-                </div>
-                <div class="coderight">
-                    <h2>Let's<br>code</h2>
-                </div>
+                    <div class="coderight">
+                        <h2>Let’s<br>code</h2>
+                    </div>
+                </section>
+                <section>
+                    <h3>Running example binaries</h3>
+                    <pre><code data-trim class="nohighlight hljs" data-noescape>
+<span class="hljs-meta">$</span> <var>vm</var> rwa2/3-fizz.rwa2 | head
+1
+2
+Fizz
+4
+Buzz
+Fizz
+7
+8
+Fizz
+Buzz
+<span class="hljs-meta">$</span> <var>vm</var> rwa2/3-test.rwa2<span class="blinking-cursor">_</span>
+</code></pre>
+                    <p>Replace <var>vm</var> with the command to run your virtual machine implementation.</p>
+                </section>
             </section>
-
 
             <section>
                 <section>
@@ -1225,7 +1295,7 @@ class Machine
                 <section>
                     <h2>Emulating MOS 6502</h2>
                     <p>Has hardware features our architecture does not have.</p>
-                    <p>No problem, we'll just emulate those.</p>
+                    <p>No problem, we’ll just emulate those.</p>
                     <ul>
                         <li>Registers <span class="fragment fade-left green" data-fragment-index="1">➔ Memory</span>
                         </li>
@@ -1296,8 +1366,33 @@ class Machine
                         </div>
                     </div>
                     <div class="coderight">
-                            <h2>Let's<br>code</h2>
+                            <h2>Let’s<br>code</h2>
                     </div>
+                </section>
+
+                <section>
+                    <h3>Running example binary</h3>
+                    <pre><code data-trim class="nohighlight hljs" data-noescape style="max-height: none;">
+<span class="hljs-meta">$</span> <var>vm</var> 4-mos6502.rwa2
+Reset vector: 0xFFFC
+[CLR]
+
+    **** commodore 64 basic v2 ****
+
+ 64k ram system  38911 basic bytes free
+
+ready.
+print sqr(42)
+ 6.4807407
+
+ready.
+10 print "hello"
+run
+hello
+
+ready.
+<span class="blinking-cursor">_</span>
+</code></pre>
                 </section>
 
                 <section data-background="images/6502-instr.png">
@@ -1454,7 +1549,7 @@ if (mem[<var>b</var>] &lt;= 0) pc = <var>c</var></td>
                             <tr>
                                 <td>0</td>
                                 <td>2</td>
-                                <td>Magic 'RW'</td>
+                                <td>Magic ‘RW’</td>
                             </tr>
                             <tr>
                                 <td>2</td>
@@ -1477,13 +1572,13 @@ if (mem[<var>b</var>] &lt;= 0) pc = <var>c</var></td>
                                 <td>End of memory (eom) pointer, .BSS segment end</td>
                             </tr>
                             <tr>
-                                <td>4+2*ps</td>
-                                <td>eof-(4+2*ps)</td>
+                                <td>4+2×ps</td>
+                                <td>eof−(4+2×ps)</td>
                                 <td>.TEXT segment, executable code and data</td>
                             </tr>
                             <tr class="fragment fade-in vizrt-color" data-fragment-index="1">
                                 <td>eof</td>
-                                <td>eom-eof</td>
+                                <td>eom−eof</td>
                                 <td>Zero initialized runtime memory (.BSS segment)</td>
                             </tr>
                         </tbody>
@@ -1494,8 +1589,8 @@ if (mem[<var>b</var>] &lt;= 0) pc = <var>c</var></td>
                 <section data-background="images/mark-zbikowski.jpg" data-background-transition="slide" class="lefty">
                     <div>
                         <h3>Header Magic Signature</h3>
-                        <p>DOS MZ executables are identified by ASCII characters '<strong>M</strong>' and
-                            '<strong>Z</strong>' at the start of the file</p>
+                        <p>DOS MZ executables are identified by ASCII characters ‘<strong>M</strong>’ and
+                            ‘<strong>Z</strong>’ at the start of the file</p>
                         <p><strong>M</strong>ark <strong>Z</strong>bikowski was one of leading developers of MS-DOS</p>
                     </div>
                 </section>
@@ -1555,13 +1650,13 @@ if (mem[<var>b</var>] &lt;= 0) pc = <var>c</var></td>
                                 <td>3-test</td>
                                 <td>14065</td>
                                 <td>14062</td>
-                                <td>-3</td>
+                                <td>−3</td>
                             </tr>
                             <tr>
                                 <td>4-mos6502</td>
                                 <td>277365</td>
                                 <td>211782</td>
-                                <td>-65583</td>
+                                <td>−65583</td>
                             </tr>
                         </tbody>
                     </table>
@@ -1611,7 +1706,7 @@ if (mem[<var>b</var>] &lt;= 0) pc = <var>c</var></td>
 
                     </div>
                     <div class="coderight">
-                        <h2>Let's<br>code</h2>
+                        <h2>Let’s<br>code</h2>
                     </div>
                 </section>
 
@@ -1749,28 +1844,28 @@ Hello World!
                 </section>
                 <section>
                     <h3>Benchmarking Candidates</h3>
-                    <img class="chart" src="images/ext1-chart.svg">
+                    <img class="chart" src="images/ext1-chart.svg" style="width: 80%;">
                 </section>
 
                 <section>
                     <h3>Add With Carry (ADC) + ...</h3>
-                    <img class="chart" src="images/ext2-chart.svg">
+                    <img class="chart" src="images/ext2-chart.svg" style="width: 80%;">
                 </section>
 
 
                 <section>
                     <h3>Move Byte (MOV) + ...</h3>
-                    <img class="chart" src="images/ext3-chart.svg">
+                    <img class="chart" src="images/ext3-chart.svg" style="width: 80%;">
                 </section>
 
                 <section>
                     <h3>Observations</h3>
                     <ul>
-                        <li>We've picked the three instructions ADC, MOV and ADD.P.</li>
-                        <li>We're seeing diminishing returns.</li>
-                        <li>We're now up to eight instructions, which is a nice round number.</li>
+                        <li>We’ve picked the three instructions ADC, MOV and ADD.P.</li>
+                        <li>We’re seeing diminishing returns.</li>
+                        <li>We’re now up to eight instructions, which is a nice round number.</li>
                         <li>ADC and ADD.P overlap in functionality.</li>
-                        <li>We can't be sure we've picked the best three instructions.</li>    
+                        <li>We can’t be sure we’ve picked the best three instructions.</li>
                     </ul>
                 </section>
 
@@ -1958,21 +2053,21 @@ Hello World!
                                 <td>922</td>
                                 <td>927</td>
                                 <td>657</td>
-                                <td>-270</td>
+                                <td>−270</td>
                             </tr>
                             <tr>
                                 <td>3-test</td>
                                 <td>14065</td>
                                 <td>14062</td>
                                 <td>10272</td>
-                                <td>-3790</td>
+                                <td>−3790</td>
                             </tr>
                             <tr>
                                 <td>4-mos6502</td>
                                 <td>277365</td>
                                 <td>211782</td>
                                 <td>80872</td>
-                                <td>-130910</td>
+                                <td>−130910</td>
                             </tr>
                         </tbody>
                     </table>
@@ -2167,7 +2262,7 @@ Hello World!
     
             <section data-background-video="https://virzrtakamai.azureedge.net/Dmm3BWSV3/assetstream.aspx?assetid=2763&mediaformatid=50039&destinationid=10016&accesskey=1e321aa6-fb07-44d1-93bc-7c4de0ce5743" data-background-video-loop="true" data-background-video-muted="true">
                 <div class="white-contrast">
-                    <h3>We're Hiring</h3>
+                    <h3>We’re Hiring</h3>
                     <p><a href="https://www.vizrt.com/">https://www.vizrt.com/</a></p>
                 </div>
         </section>
